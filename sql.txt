@@ -1,0 +1,31 @@
+1.
+USE mydb;
+SELECT *, (SELECT customer_id FROM orders o WHERE o.id = od.order_id) AS customer_id FROM order_details od;
+
+2.
+USE mydb;
+SELECT * FROM order_details od WHERE (SELECT shipper_id FROM orders o WHERE o. id = od.order_id) = 3;
+
+3.
+USE mydb;
+SELECT order_id, AVG(quantity) AS average_quantity FROM (SELECT * FROM order_details WHERE quantity > 10) AS temp_table
+GROUP BY order_id;
+
+4.
+USE mydb;
+WITH temp AS (SELECT order_id, quantity FROM order_details WHERE quantity > 10)
+SELECT order_id, AVG(quantity) AS average_quantity FROM temp GROUP BY order_id;
+
+5.
+USE mydb;
+DROP FUNCTION IF EXISTS divide_floats;
+DELIMITER //
+CREATE FUNCTION divide_floats(numi FLOAT, num2 FLOAT) RETURNS FLOAT DETERMINISTIC
+BEGIN
+	RETURN numl / num2;
+END //
+DELIMITER;
+SELECT order_id, divide_floats(quantity, 2) AS half_quantity FROM order_details;
+
+
+
